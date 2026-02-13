@@ -1,0 +1,71 @@
+/* ============================================
+   Neon Theme - JogueDLE
+   ============================================ */
+
+body.theme-neon {
+  /* Colors */
+  --bg-primary: #0a0e27;
+  --bg-secondary: rgba(20, 25, 50, 0.8);
+  --bg-tertiary: rgba(10, 14, 39, 0.5);
+  
+  --text-primary: #ffffff;
+  --text-secondary: #00ffff;
+  --text-tertiary: #999999;
+  
+  --border-color: #ff00ff;
+  --border-hover: #00ffff;
+  
+  /* Neon colors */
+  --neon-pink: #ff00ff;
+  --neon-cyan: #00ffff;
+  --neon-purple: #8a2be2;
+  
+  /* Shadows */
+  --shadow-sm: 0 0 10px rgba(255, 0, 255, 0.3);
+  --shadow-md: 0 0 20px rgba(255, 0, 255, 0.4);
+  --shadow-lg: 0 0 40px rgba(255, 0, 255, 0.6);
+  
+  /* Components */
+  --card-bg: rgba(20, 25, 50, 0.8);
+  --card-border: #ff00ff;
+  --card-hover-shadow: 0 0 40px rgba(255, 0, 255, 0.6);
+  
+  --button-bg: rgba(255, 0, 255, 0.3);
+  --button-text: #ff00ff;
+  --button-hover: rgba(255, 0, 255, 0.5);
+  
+  --modal-bg: rgba(20, 25, 50, 0.95);
+  --modal-overlay: rgba(0, 0, 0, 0.95);
+  
+  /* Game colors */
+  --game-1: #ff00ff;
+  --game-2: #00ffff;
+  --game-3: #ff00ff;
+  --game-4: #00ffff;
+  --game-5: #ff00ff;
+  
+  /* Feedback */
+  --color-correct: #10b981;
+  --color-wrong: #ef4444;
+  --color-info: #00ffff;
+  
+  /* Apply */
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: 'Courier New', monospace;
+}
+
+/* Neon grid effect */
+body.theme-neon::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: 
+    linear-gradient(90deg, transparent 0%, rgba(255,0,255,0.03) 50%, transparent 100%),
+    repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,255,255,0.03) 2px, rgba(0,255,255,0.03) 4px);
+  pointer-events: none;
+  z-index: 1;
+}
