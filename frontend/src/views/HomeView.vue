@@ -19,28 +19,29 @@
 
     <!-- Modal do Jogo -->
     <GameModal
-      :is-open="modalOpen"
-      :game-title="selectedGame?.name || ''"
-      :current-round="1"
-      :total-rounds="5"
-      :score="0"
+      :is-open="gameStore.isPlaying"
+      :game-title="currentGameTitle"
+      :current-round="gameStore.currentRound"
+      :total-rounds="gameStore.totalRounds"
+      :score="gameStore.score"
       @close="closeGame"
     >
-      <div class="temp-content">
-        <p>Jogo: {{ selectedGame?.name }}</p>
-        <p>Em breve você jogará {{ selectedGame?.description }}</p>
-      </div>
+      <QuestionArea @close="closeGame" />
     </GameModal>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { computed } from 'vue'
 import { useThemeStore } from '@/stores/theme'
+import { useGameStore } from '@/stores/game'
+import { getQuestionsByGame } from '@/data/mockQuestions'
 import GameCard from '@/components/game/GameCard.vue'
 import GameModal from '@/components/game/GameModal.vue'
+import QuestionArea from '@/components/game/QuestionArea.vue'
 
 const themeStore = useThemeStore()
+const gameStore = useGameStore()
 
 const siteTitle = computed(() => {
   return themeStore.currentTheme === 'neon' ? 'JOGUEDLE' : 'JogueDLE'
@@ -52,6 +53,20 @@ const siteSubtitle = computed(() => {
     : 'Seu desafio DLE todo dia'
 })
 
+const currentGameTitle = computed(() => {
+  if (!gameStore.currentGame) return ''
+  
+  const gameMap: Record<string, string> = {
+    'carodle': '💰 CARODLE',
+    'cronodle': '⏱ CRONODLE',
+    'numerodle': '📊 NUMERODLE',
+    'verdadle': '🤔 VERDADLE',
+    'frasedle': '✍️ FRASEDLE'
+  }
+  
+  return gameMap[gameStore.currentGame] || ''
+})
+
 interface Game {
   id: number
   icon: string
@@ -61,24 +76,55 @@ interface Game {
 }
 
 const games: Game[] = [
-  { id: 1, icon: '$', name: 'CARODLE', description: 'Qual produto é mais caro?', slug: 'carodle' },
-  { id: 2, icon: '⏱', name: 'CRONODLE', description: 'O que aconteceu primeiro?', slug: 'cronodle' },
-  { id: 3, icon: '±', name: 'NUMERODLE', description: 'Qual número é maior?', slug: 'numerodle' },
-  { id: 4, icon: '?', name: 'VERDADLE', description: 'Verdadeiro ou falso?', slug: 'verdadle' },
-  { id: 5, icon: '""', name: 'FRASEDLE', description: 'Complete a frase famosa', slug: 'frasedle' }
+  { 
+    id: 1, 
+    icon: '$', 
+    name: 'CARODLE', 
+    description: 'Qual produto é mais caro?', 
+    slug: 'carodle' 
+  },
+  { 
+    id: 2, 
+    icon: '⏱', 
+    name: 'CRONODLE', 
+    description: 'O que aconteceu primeiro?', 
+    slug: 'cronodle' 
+  },
+  { 
+    id: 3, 
+    icon: '±', 
+    name: 'NUMERODLE', 
+    description: 'Qual número é maior?', 
+    slug: 'numerodle' 
+  },
+  { 
+    id: 4, 
+    icon: '?', 
+    name: 'VERDADLE', 
+    description: 'Verdadeiro ou falso?', 
+    slug: 'verdadle' 
+  },
+  { 
+    id: 5, 
+    icon: '""', 
+    name: 'FRASEDLE', 
+    description: 'Complete a frase famosa', 
+    slug: 'frasedle' 
+  }
 ]
 
-const modalOpen = ref(false)
-const selectedGame = ref<Game | null>(null)
-
 const openGame = (game: Game) => {
-  selectedGame.value = game
-  modalOpen.value = true
+  const questions = getQuestionsByGame(game.slug)
+  
+  if (questions.length > 0) {
+    gameStore.startGame(game.slug, questions)
+  } else {
+    console.error('Nenhuma questão encontrada para:', game.slug)
+  }
 }
 
 const closeGame = () => {
-  modalOpen.value = false
-  selectedGame.value = null
+  gameStore.resetGame()
 }
 </script>
 
@@ -118,7 +164,7 @@ header {
   letter-spacing: 5px;
   background: linear-gradient(45deg, #ff00ff, #00ffff, #ff00ff);
   -webkit-background-clip: text;
-  background-clip: text;                 
+  background-clip: text;
   -webkit-text-fill-color: transparent;
   text-shadow: 0 0 30px rgba(255, 0, 255, 0.5);
   animation: glow 2s ease-in-out infinite;
@@ -144,25 +190,6 @@ header {
   gap: 20px;
   max-width: 900px;
   margin: 0 auto;
-}
-
-/* Temporary modal content */
-.temp-content {
-  text-align: center;
-  padding: 40px 20px;
-}
-
-.temp-content p {
-  margin: 10px 0;
-  font-size: 1.1em;
-}
-
-.theme-light .temp-content p {
-  color: var(--text-primary);
-}
-
-.theme-neon .temp-content p {
-  color: var(--neon-cyan);
 }
 
 /* Responsive */
