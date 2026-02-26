@@ -50,7 +50,7 @@ const siteTitle = computed(() => {
 const siteSubtitle = computed(() => {
   return themeStore.currentTheme === 'neon' 
     ? '// SISTEMA DE JOGOS DLE //' 
-    : 'Seu desafio DLE todo dia'
+    : 'Seu desafio DLE de todos os dias'
 })
 
 const currentGameTitle = computed(() => {
