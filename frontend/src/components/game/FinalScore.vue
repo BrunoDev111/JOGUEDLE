@@ -3,7 +3,7 @@
     <div class="score-emoji">{{ emoji }}</div>
     <h3>{{ message }}</h3>
     <p class="score-text">
-      Você pontuou <strong>{{ score }}</strong> de {{ totalPoints }} pontos!
+      Você fez <strong>{{ score }}</strong> de {{ totalPoints }} pontos!
     </p>
     <p class="percentage">{{ percentage }}% de acertos</p>
 
